@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LIAP — Project Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0f;
+    --surface: #161617;
+    --card: #1c1c1e;
+    --card-hover: #242426;
+    --border: rgba(255,255,255,0.08);
+    --border-med: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --muted: #8e8b85;
+    --hint: #545250;
+    --accent: #c9a96e;
+    --accent-dim: rgba(201,169,110,0.12);
+    --red: #e05c5c;
+    --red-dim: rgba(224,92,92,0.12);
+    --amber: #d4894a;
+    --amber-dim: rgba(212,137,74,0.12);
+    --green: #5dab7f;
+    --green-dim: rgba(93,171,127,0.12);
+    --blue: #5b8fc9;
+    --blue-dim: rgba(91,143,201,0.12);
+    --purple: #8b7fd4;
+    --purple-dim: rgba(139,127,212,0.12);
+    --pink: #c96b8f;
+    --pink-dim: rgba(201,107,143,0.12);
+    --gray-dim: rgba(142,139,133,0.12);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --radius-pill: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 0 0 120px 0;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 56px 20px 20px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .last-updated {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--hint);
+    text-align: right;
+    padding-top: 4px;
+  }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    border: 0.5px solid var(--border-med);
+    background: transparent;
+    color: var(--muted);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-appearance: none;
+  }
+  .tab.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* MAIN CONTENT */
+  .content { padding: 20px 16px 0; }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--hint);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+
+  /* PRIORITY SECTION */
+  .priority-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .priority-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .priority-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .priority-item:first-child { padding-top: 0; }
+  .priority-num {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 28px;
+    padding-top: 2px;
+  }
+  .priority-text { flex: 1; }
+  .priority-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .priority-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* CONFLICTS SECTION */
+  .conflict-card {
+    background: var(--red-dim);
+    border-radius: var(--radius);
+    border: 0.5px solid rgba(224,92,92,0.2);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .conflict-item {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 0.5px solid rgba(224,92,92,0.15);
+    align-items: flex-start;
+  }
+  .conflict-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .conflict-item:first-child { padding-top: 0; }
+  .conflict-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .conflict-text {
+    font-size: 13px;
+    color: #e8a0a0;
+    line-height: 1.5;
+  }
+
+  /* PROJECT CARDS */
+  .project-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .project-card.expanded { border-color: var(--border-med); }
+
+  .project-header {
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .project-header:active { background: var(--card-hover); }
+
+  .project-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .project-meta { flex: 1; min-width: 0; }
+  .project-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .project-client {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap { display: flex; align-items: center; gap: 8px; }
+  .progress-bar-bg {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill { height: 3px; border-radius: 2px; transition: width 0.3s; }
+  .progress-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--hint);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .project-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .chevron {
+    font-size: 12px;
+    color: var(--hint);
+    margin-left: 4px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .expanded .chevron { transform: rotate(180deg); }
+
+  /* BADGE */
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  /* EXPANDED BODY */
+  .project-body {
+    padding: 0 16px 16px;
+    border-top: 0.5px solid var(--border);
+    display: none;
+  }
+  .project-card.expanded .project-body { display: block; }
+
+  .project-summary {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 12px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  /* NEXT ACTION BOX */
+  .next-action {
+    background: var(--accent-dim);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid rgba(201,169,110,0.2);
+    padding: 10px 12px;
+    margin: 12px 0;
+  }
+  .next-action-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .next-action-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* SECTION DIVIDER */
+  .body-section {
+    margin-top: 14px;
+  }
+  .body-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--hint);
+    margin-bottom: 8px;
+  }
+
+  /* TASKS */
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-item:active { opacity: 0.7; }
+  .task-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-med);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .task-check.done {
+    border-color: var(--green);
+    background: var(--green);
+  }
+  .task-check.done::after {
+    content: '';
+    width: 6px;
+    height: 4px;
+    border-left: 1.5px solid #0e0e0f;
+    border-bottom: 1.5px solid #0e0e0f;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+  .task-label {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text);
+    transition: color 0.15s;
+  }
+  .task-label.done {
+    color: var(--hint);
+    text-decoration: line-through;
+  }
+  .task-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--hint);
+  }
+
+  /* INVOICES */
+  .invoice-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .invoice-item:last-child { border-bottom: none; }
+  .invoice-item:active { opacity: 0.7; }
+  .invoice-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 90px;
+  }
+  .invoice-label {
+    flex: 1;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .invoice-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* FLAGS */
+  .flag-item {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: flex-start;
+  }
+  .flag-item:last-child { border-bottom: none; }
+  .flag-arrow {
+    font-size: 12px;
+    color: var(--amber);
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .flag-text {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* DEADLINE */
+  .deadline-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .deadline-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--hint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    min-width: 70px;
+  }
+  .deadline-value {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* INVOICE STATUS CYCLE HINT */
+  .tap-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--hint);
+    text-align: center;
+    padding-top: 6px;
+  }
+
+  /* EMPTY STATE */
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--hint);
+    font-size: 13px;
+  }
+
+  /* SECTION SPACING */
+  .section { margin-bottom: 28px; }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-label">Life is Art Productions</div>
+      <div class="header-title">Project Dashboard</div>
+    </div>
+    <div class="last-updated">Updated<br>Apr 5, 2026</div>
+  </div>
+  <div class="filter-tabs">
+    <button class="tab active" onclick="setFilter('all')">All</button>
+    <button class="tab" onclick="setFilter('post')">Post</button>
+    <button class="tab" onclick="setFilter('pre')">Pre-prod</button>
+    <button class="tab" onclick="setFilter('admin')">Admin</button>
+    <button class="tab" onclick="setFilter('offer')">Offers</button>
+    <button class="tab" onclick="setFilter('direction')">Direction</button>
+  </div>
+</div>
+
+<div class="content" id="mainContent"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const LAST_UPDATED = 'Apr 5, 2026';
+
+const PRIORITY = [
+  {
+    title: 'Audia Cup 2025 — start post now',
+    sub: 'Largest workload on the board. Personal goal: mostly complete before June.'
+  },
+  {
+    title: 'Carson Wealth — close quick wins',
+    sub: 'CW010 title fixes + welcome video minor edits. Both nearly done, both have invoices pending.'
+  },
+  {
+    title: 'CLC Faith & Finance — finish pilot',
+    sub: 'Nearly complete. Send invoice 3. Check invoice 2 when home.'
+  },
+  {
+    title: 'PSO — re-engage and close',
+    sub: 'Translation text in hand. Contact PSO first, then complete captions.'
+  },
+  {
+    title: 'Carson Wealth — Taxes in Retirement',
+    sub: 'Post not started. Schedule after quick wins above are closed.'
+  }
+];
+
+const CONFLICTS = [
+  'Audia Cup 2026 shoot is in June — same window as Apple career experience end date. Travel and shoot logistics need coordination.',
+  'CLC invoice 2 is physically at home and inaccessible for ~2 weeks due to travel. Cannot reconcile until you return.',
+  'CLC Virtuous Venture + Guest of the Week offer requires a delivery estimate. Current bandwidth through June is tight — decision needed by May.',
+  'Audia Cup 2025 post production is a large workload against a limited morning creative window of 2hrs 45min on weekdays.',
+  'PSO relationship status unknown due to long gap in contact. Re-engagement needed before delivery — travel may delay outreach.'
+];
+
+const INV_STATUSES = ['pending', 'sent', 'paid', 'check'];
+const INV_STYLE = {
+  paid:    { label: 'Paid',     bg: 'var(--green-dim)',  color: 'var(--green)',  border: 'rgba(93,171,127,0.25)' },
+  sent:    { label: 'Sent',     bg: 'var(--amber-dim)',  color: 'var(--amber)',  border: 'rgba(212,137,74,0.25)' },
+  pending: { label: 'Pending',  bg: 'var(--gray-dim)',   color: 'var(--muted)',  border: 'rgba(255,255,255,0.1)' },
+  check:   { label: 'Check!',   bg: 'var(--red-dim)',    color: 'var(--red)',    border: 'rgba(224,92,92,0.25)' },
+  tbd:     { label: 'TBD',      bg: 'var(--gray-dim)',   color: 'var(--hint)',   border: 'rgba(255,255,255,0.08)' },
+  discount:{ label: 'Disc/TBD', bg: 'var(--purple-dim)', color: 'var(--purple)', border: 'rgba(139,127,212,0.25)' },
+};
+
+const URGENCY_STYLE = {
+  critical:  { label: 'Priority', bg: 'var(--red-dim)',    color: 'var(--red)' },
+  high:      { label: 'High',     bg: 'var(--amber-dim)',  color: 'var(--amber)' },
+  medium:    { label: 'Medium',   bg: 'var(--blue-dim)',   color: 'var(--blue)' },
+  low:       { label: 'Low',      bg: 'var(--gray-dim)',   color: 'var(--muted)' },
+  offer:     { label: 'Offer',    bg: 'var(--purple-dim)', color: 'var(--purple)' },
+  direction: { label: 'Direction',bg: 'var(--blue-dim)',   color: 'var(--blue)' },
+};
+
+const PHASE_STYLE = {
+  post:      { label: 'Post production', bg: 'var(--blue-dim)',   color: 'var(--blue)' },
+  pre:       { label: 'Pre-production',  bg: 'var(--pink-dim)',   color: 'var(--pink)' },
+  admin:     { label: 'Admin',           bg: 'var(--amber-dim)',  color: 'var(--amber)' },
+  offer:     { label: 'Offer',           bg: 'var(--purple-dim)', color: 'var(--purple)' },
+  direction: { label: 'Direction',       bg: 'var(--gray-dim)',   color: 'var(--muted)' },
+};
+
+const CLIENT_COLORS = {
+  AG: { bg: 'rgba(91,143,201,0.15)', color: '#5b8fc9' },
+  CW: { bg: 'rgba(93,171,127,0.15)', color: '#5dab7f' },
+  CL: { bg: 'rgba(201,107,143,0.15)', color: '#c96b8f' },
+  PS: { bg: 'rgba(212,137,74,0.15)', color: '#d4894a' },
+  LI: { bg: 'rgba(142,139,133,0.15)', color: '#8e8b85' },
+};
+
+const PROJECTS = [
+  {
+    id: 'audia25',
+    client: 'Audia Group',
+    abbr: 'AG',
+    title: 'Audia Cup 2025',
+    phase: 'post',
+    urgency: 'critical',
+    deadline: 'Personal goal: mostly complete before June 2026. Client flexible past that.',
+    summary: 'Thousands of photos (~5–10% culled). Full week of documentary footage completely untouched. Largest single workload on the board.',
+    nextAction: 'Dedicate weekend blocks to photo cull and video ingest — start this weekend.',
+    tasks: [
+      { id: 'a25_t1', label: 'Photo import', done: true },
+      { id: 'a25_t2', label: 'Photo cull', done: false, note: '5–10% done' },
+      { id: 'a25_t3', label: 'Photo edit', done: false },
+      { id: 'a25_t4', label: 'Physical prints', done: false },
+      { id: 'a25_t5', label: 'Photo books', done: false },
+      { id: 'a25_t6', label: 'Video ingest', done: false },
+      { id: 'a25_t7', label: 'Video / documentary edit', done: false },
+      { id: 'a25_t8', label: 'Final delivery', done: false },
+    ],
+    invoices: [
+      { id: 'AGV_242', label: 'Production — Sep 2025', amount: '$7,431', status: 'paid' },
+      { id: 'AGV_2025_post', label: 'Final delivery — hours + print costs', amount: 'TBD', status: 'pending' },
+    ],
+    flags: [
+      'Final invoice based on editing hours + physical print and book costs',
+      'Biggest workload — needs consistent weekend time blocks',
+    ],
+  },
+  {
+    id: 'audia26',
+    client: 'Audia Group',
+    abbr: 'AG',
+    title: 'Audia Cup 2026',
+    phase: 'pre',
+    urgency: 'medium',
+    deadline: 'June 2026 — dates confirmed, flight purchased.',
+    summary: 'Pre-production phase. Dates confirmed. Flight purchased for Mark. Standard two-invoice structure.',
+    nextAction: 'No immediate action — revisit pre-production checklist in May.',
+    tasks: [
+      { id: 'a26_t1', label: 'Dates confirmed', done: true },
+      { id: 'a26_t2', label: 'Flight purchased', done: true },
+      { id: 'a26_t3', label: 'Shot list / run of show', done: false },
+      { id: 'a26_t4', label: 'Crew confirmation — John Marshall', done: false },
+      { id: 'a26_t5', label: 'Gear prep', done: false },
+      { id: 'a26_t6', label: 'Production', done: false },
+    ],
+    invoices: [
+      { id: 'AGV_2026_prod', label: 'Post production invoice', amount: 'TBD', status: 'pending' },
+      { id: 'AGV_2026_del', label: 'Final delivery invoice', amount: 'TBD', status: 'pending' },
+    ],
+    flags: [
+      'Audia Cup 2025 post should be substantially complete before this shoot',
+      'Confirm John Marshall availability early',
+      'Shoot overlaps with Apple career experience end — logistics needed',
+    ],
+  },
+  {
+    id: 'cw010',
+    client: 'Carson Wealth',
+    abbr: 'CW',
+    title: 'CW010 — Title Fixes',
+    phase: 'admin',
+    urgency: 'high',
+    deadline: 'No hard date. Invoice already sent — payment in queue.',
+    summary: 'Invoice sent. Client received W-9 a few days ago — likely in AP queue. Minor title corrections identified by client still need to be fixed.',
+    nextAction: 'Complete title fixes now — low effort, protects client relationship.',
+    tasks: [
+      { id: 'cw010_t1', label: 'Production complete', done: true },
+      { id: 'cw010_t2', label: 'Invoice CW010 sent', done: true },
+      { id: 'cw010_t3', label: 'Client W-9 received', done: true },
+      { id: 'cw010_t4', label: 'Title fixes', done: false },
+      { id: 'cw010_t5', label: 'Payment received', done: false },
+    ],
+    invoices: [
+      { id: 'CW010', label: 'Awaiting payment', amount: 'TBD', status: 'sent' },
+    ],
+    flags: [
+      'Good evening admin task — low hours, high relationship value',
+      'Fix titles before or immediately after payment arrives',
+    ],
+  },
+  {
+    id: 'cw_welcome',
+    client: 'Carson Wealth',
+    abbr: 'CW',
+    title: 'Welcome Video / Employee Headshots',
+    phase: 'post',
+    urgency: 'high',
+    deadline: 'No hard date — minor edits only remaining.',
+    summary: 'Website welcome video, employee highlight video, and corporate headshots. Minor edits needed to complete. Invoice includes Jan production date cost.',
+    nextAction: 'Complete minor edits and send invoice — quick win, close it out.',
+    tasks: [
+      { id: 'cww_t1', label: 'Jan production date complete', done: true },
+      { id: 'cww_t2', label: 'Post production started', done: true },
+      { id: 'cww_t3', label: 'Minor edits', done: false },
+      { id: 'cww_t4', label: 'Final delivery', done: false },
+      { id: 'cww_t5', label: 'Invoice sent — prod + post', done: false },
+    ],
+    invoices: [
+      { id: 'TBD', label: 'Jan production + post costs', amount: 'TBD', status: 'pending' },
+    ],
+    flags: [
+      'No project code assigned yet',
+      'Minor edits only — should be fastest active post project to close',
+    ],
+  },
+  {
+    id: 'cw_taxes',
+    client: 'Carson Wealth',
+    abbr: 'CW',
+    title: 'Taxes in Retirement Video',
+    phase: 'post',
+    urgency: 'medium',
+    deadline: 'No hard date. Recorded March 2026.',
+    summary: 'Presentation video recorded in March. Post production not yet started. Own invoice covering half-day production + post costs.',
+    nextAction: 'Begin post after welcome video and CW010 fixes are closed out.',
+    tasks: [
+      { id: 'cwt_t1', label: 'Production complete — Mar 2026', done: true },
+      { id: 'cwt_t2', label: 'Post production', done: false },
+      { id: 'cwt_t3', label: 'Final delivery', done: false },
+      { id: 'cwt_t4', label: 'Invoice sent — prod + post', done: false },
+    ],
+    invoices: [
+      { id: 'TBD', label: 'Half-day production + post costs', amount: 'TBD', status: 'pending' },
+    ],
+    flags: [
+      'No project code assigned yet',
+      'Do not start post until welcome video is delivered',
+    ],
+  },
+  {
+    id: 'clc_pilot',
+    client: 'CLC — Caps Lock Company',
+    abbr: 'CL',
+    title: 'Faith & Finance — Pilot Episode',
+    phase: 'post',
+    urgency: 'high',
+    deadline: 'No hard date — nearly complete.',
+    summary: 'Pilot episode TV show. Mark is editor. Nearly complete. Invoice 2 needs check when home. Invoice 3 to cover remaining hours.',
+    nextAction: 'Finish final edits. Send invoice 3. Check invoice 2 when back home in ~2 weeks.',
+    tasks: [
+      { id: 'clc_t1', label: 'Edit — pilot episode', done: false, note: 'Nearly complete' },
+      { id: 'clc_t2', label: 'Invoice 1 — paid', done: true },
+      { id: 'clc_t3', label: 'Invoice 2 — check when home', done: false, note: '~2 weeks' },
+      { id: 'clc_t4', label: 'Invoice 3 — remaining hours', done: false },
+      { id: 'clc_t5', label: 'Final delivery', done: false },
+    ],
+    invoices: [
+      { id: 'CLC_inv1', label: 'Invoice 1', amount: 'TBD', status: 'paid' },
+      { id: 'CLC_inv2', label: 'Invoice 2', amount: 'TBD', status: 'check' },
+      { id: 'CLC_inv3', label: 'Invoice 3 — remaining hours', amount: 'TBD', status: 'pending' },
+    ],
+    flags: [
+      'Invoice 2 physically at home — inaccessible for ~2 weeks',
+      'Close pilot before deciding on new segment offers',
+    ],
+  },
+  {
+    id: 'clc_segments',
+    client: 'CLC — Caps Lock Company',
+    abbr: 'CL',
+    title: 'Faith & Finance — New Segments',
+    phase: 'offer',
+    urgency: 'offer',
+    deadline: 'CLC needs estimated delivery date before confirming.',
+    summary: 'Two segments offered: Virtuous Venture and Guest of the Week. Undecided on accepting. Bandwidth through June is tight. CLC just needs a delivery estimate to confirm fit.',
+    nextAction: 'Hold decision until pilot is closed and May bandwidth is clearer.',
+    tasks: [
+      { id: 'clcs_t1', label: 'Offer received', done: true },
+      { id: 'clcs_t2', label: 'Decision — accept or decline', done: false },
+      { id: 'clcs_t3', label: 'Delivery estimate to CLC if accepted', done: false },
+    ],
+    invoices: [],
+    flags: [
+      'Personal note: unsure about taking these on',
+      'Audia Cup 2025 post and Carson Wealth are higher priority',
+      'Revisit in May once bandwidth picture is clearer',
+    ],
+  },
+  {
+    id: 'pso',
+    client: 'Pittsburgh Symphony Orchestra',
+    abbr: 'PS',
+    title: 'Meet the Orchestra — Post',
+    phase: 'post',
+    urgency: 'low',
+    deadline: 'No official due date. Longest running open project.',
+    summary: 'French and Mandarin subtitle/caption tracks needed to complete. Translation text already in hand. Pricing uncertain due to elapsed time — considering discounted or waived final invoice.',
+    nextAction: 'Contact PSO to re-establish relationship first. Then complete captions and close out.',
+    tasks: [
+      { id: 'pso_t1', label: 'Production complete', done: true },
+      { id: 'pso_t2', label: 'Main edit complete', done: true },
+      { id: 'pso_t3', label: 'Translation text received', done: true },
+      { id: 'pso_t4', label: 'Contact PSO — re-establish relationship', done: false },
+      { id: 'pso_t5', label: 'French captions / subtitles', done: false },
+      { id: 'pso_t6', label: 'Mandarin captions / subtitles', done: false },
+      { id: 'pso_t7', label: 'Final delivery', done: false },
+      { id: 'pso_t8', label: 'Final invoice', done: false },
+    ],
+    invoices: [
+      { id: 'PSO_001', label: 'Original invoice — Nov 2024', amount: '$1,600', status: 'paid' },
+      { id: 'PSO_final', label: 'Final edits — discount or waived', amount: 'TBD', status: 'discount' },
+    ],
+    flags: [
+      'Translation text in hand — no blocker once PSO is re-engaged',
+      'Relationship status unknown — professional outreach needed before delivery',
+      'Good caption work for evening sessions — focused but not deeply creative',
+    ],
+  },
+  {
+    id: 'passion',
+    client: 'LIAP — Internal',
+    abbr: 'LI',
+    title: 'Passion Projects / Print & Stock Sales',
+    phase: 'direction',
+    urgency: 'direction',
+    deadline: 'No deadline. Building toward.',
+    summary: 'Direction not yet fully defined. Goal: turn existing creative work into passive or semi-passive income through print sales, stock footage, and other avenues. High long-term leverage.',
+    nextAction: 'Begin defining direction once Audia Cup 2025 post is substantially complete.',
+    tasks: [
+      { id: 'pp_t1', label: 'Define direction and priorities', done: false },
+      { id: 'pp_t2', label: 'Inventory existing sellable work', done: false },
+      { id: 'pp_t3', label: 'Select platform(s)', done: false },
+      { id: 'pp_t4', label: 'First listing live', done: false },
+    ],
+    invoices: [],
+    flags: [
+      'Scalable income — no subcontractors, no travel',
+      'Low urgency relative to active client work',
+      'Best explored once Audia Cup 2025 post is substantially underway',
+    ],
+  },
+];
+
+// ─── LOCAL STORAGE ──────────────────────────────────────────────────────────
+
+function getStorage() {
+  try {
+    return JSON.parse(localStorage.getItem('liap_state') || '{}');
+  } catch(e) { return {}; }
+}
+
+function saveStorage(state) {
+  try {
+    localStorage.setItem('liap_state', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function getTaskState(taskId, defaultDone) {
+  const s = getStorage();
+  return s['task_' + taskId] !== undefined ? s['task_' + taskId] : defaultDone;
+}
+
+function toggleTask(taskId, defaultDone) {
+  const s = getStorage();
+  const current = s['task_' + taskId] !== undefined ? s['task_' + taskId] : defaultDone;
+  s['task_' + taskId] = !current;
+  saveStorage(s);
+  render();
+}
+
+function getInvStatus(invKey, defaultStatus) {
+  const s = getStorage();
+  return s['inv_' + invKey] || defaultStatus;
+}
+
+function cycleInvStatus(invKey, defaultStatus) {
+  const s = getStorage();
+  const current = s['inv_' + invKey] || defaultStatus;
+  const idx = INV_STATUSES.indexOf(current);
+  const next = INV_STATUSES[(idx + 1) % INV_STATUSES.length];
+  s['inv_' + invKey] = next;
+  saveStorage(s);
+  render();
+}
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+
+let currentFilter = 'all';
+let expandedId = null;
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  render();
+}
+
+function toggleProject(id) {
+  expandedId = expandedId === id ? null : id;
+  render();
+}
+
+// ─── BADGE HELPER ───────────────────────────────────────────────────────────
+
+function badge(label, bg, color, border) {
+  return `<span class="badge" style="background:${bg};color:${color};border:0.5px solid ${border||'transparent'}">${label}</span>`;
+}
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+
+function render() {
+  const container = document.getElementById('mainContent');
+  let html = '';
+
+  // PRIORITY SECTION
+  if (currentFilter === 'all') {
+    html += `<div class="section">
+      <div class="section-label">This week — priority focus</div>
+      <div class="priority-card">
+        ${PRIORITY.map((p, i) => `
+          <div class="priority-item">
+            <div class="priority-num">${i + 1}</div>
+            <div class="priority-text">
+              <div class="priority-title">${p.title}</div>
+              <div class="priority-sub">${p.sub}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+
+    // CONFLICTS SECTION
+    html += `<div class="section">
+      <div class="section-label">Potential conflicts — non-LIAP</div>
+      <div class="conflict-card">
+        ${CONFLICTS.map(c => `
+          <div class="conflict-item">
+            <div class="conflict-dot"></div>
+            <div class="conflict-text">${c}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  // PROJECTS
+  const filtered = currentFilter === 'all'
+    ? PROJECTS
+    : PROJECTS.filter(p => p.phase === currentFilter);
+
+  if (filtered.length === 0) {
+    html += `<div class="empty">No projects in this category.</div>`;
+  } else {
+    html += `<div class="section-label">Projects — ${filtered.length} showing</div>`;
+    html += filtered.map(p => {
+      const isExp = expandedId === p.id;
+      const cc = CLIENT_COLORS[p.abbr] || CLIENT_COLORS.LI;
+      const urg = URGENCY_STYLE[p.urgency];
+      const ph = PHASE_STYLE[p.phase];
+
+      // compute progress from live state
+      const tasks = p.tasks.map(t => ({ ...t, done: getTaskState(t.id, t.done) }));
+      const doneCount = tasks.filter(t => t.done).length;
+      const pct = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
+
+      const taskRows = tasks.map(t => `
+        <div class="task-item" onclick="toggleTask('${t.id}', ${t.done})">
+          <div class="task-check ${t.done ? 'done' : ''}"></div>
+          <div class="task-label ${t.done ? 'done' : ''}">${t.label}</div>
+          ${t.note ? `<div class="task-note">${t.note}</div>` : ''}
+        </div>
+      `).join('');
+
+      const invRows = p.invoices.map((inv, idx) => {
+        const invKey = p.id + '_inv' + idx;
+        const status = inv.status === 'paid' || inv.status === 'tbd' || inv.status === 'discount'
+          ? inv.status
+          : getInvStatus(invKey, inv.status);
+        const s = INV_STYLE[status] || INV_STYLE.pending;
+        const tappable = !['paid','tbd','discount'].includes(inv.status);
+        return `
+          <div class="invoice-item" ${tappable ? `onclick="cycleInvStatus('${invKey}', '${inv.status}')"` : ''}>
+            <div class="invoice-id">${inv.id}</div>
+            <div class="invoice-label">${inv.label}</div>
+            <div class="invoice-amount">${inv.amount}</div>
+            ${badge(s.label, s.bg, s.color, s.border)}
+          </div>
+        `;
+      }).join('');
+
+      const flagRows = p.flags.map(f => `
+        <div class="flag-item">
+          <div class="flag-arrow">→</div>
+          <div class="flag-text">${f}</div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="project-card ${isExp ? 'expanded' : ''}" id="card_${p.id}">
+          <div class="project-header" onclick="toggleProject('${p.id}')">
+            <div class="project-avatar" style="background:${cc.bg};color:${cc.color}">${p.abbr}</div>
+            <div class="project-meta">
+              <div class="project-title">${p.title}</div>
+              <div class="project-client">${p.client}</div>
+              <div class="progress-wrap">
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width:${pct}%;background:${cc.color}"></div>
+                </div>
+                <div class="progress-pct">${pct}%</div>
+              </div>
+            </div>
+            <div class="project-badges">
+              ${badge(ph.label, ph.bg, ph.color)}
+              ${badge(urg.label, urg.bg, urg.color)}
+            </div>
+            <div class="chevron">▼</div>
+          </div>
+          <div class="project-body">
+            <div class="project-summary">${p.summary}</div>
+
+            <div class="next-action">
+              <div class="next-action-label">Next action</div>
+              <div class="next-action-text">${p.nextAction}</div>
+            </div>
+
+            <div class="deadline-row">
+              <div class="deadline-label">Deadline</div>
+              <div class="deadline-value">${p.deadline}</div>
+            </div>
+
+            ${tasks.length ? `
+            <div class="body-section">
+              <div class="body-section-label">Tasks</div>
+              ${taskRows}
+            </div>` : ''}
+
+            ${p.invoices.length ? `
+            <div class="body-section">
+              <div class="body-section-label">Invoices — tap to update status</div>
+              ${invRows}
+              <div class="tap-hint">tap invoice to cycle: pending → sent → paid → check</div>
+            </div>` : ''}
+
+            ${p.flags.length ? `
+            <div class="body-section">
+              <div class="body-section-label">Flags</div>
+              ${flagRows}
+            </div>` : ''}
+
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  container.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
