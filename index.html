@@ -1,914 +1,322 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lenox Square Playbook</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>LIAP — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="apple-mobile-web-app-title" content="Lenox Prep">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-  :root {
-    --bg: #0a0a0b;
-    --surface: #111112;
-    --card: #18181a;
-    --card2: #1e1e20;
-    --border: rgba(255,255,255,0.06);
-    --border-med: rgba(255,255,255,0.12);
-    --text: #edeae4;
-    --muted: #76736c;
-    --hint: #44423f;
-    --gold: #c9a455;
-    --gold-dim: rgba(201,164,85,0.09);
-    --gold-border: rgba(201,164,85,0.22);
-    --red: #d45c5c;
-    --red-dim: rgba(212,92,92,0.09);
-    --red-border: rgba(212,92,92,0.26);
-    --amber: #c47c38;
-    --amber-dim: rgba(196,124,56,0.09);
-    --amber-border: rgba(196,124,56,0.26);
-    --green: #58976b;
-    --green-dim: rgba(88,151,107,0.09);
-    --green-border: rgba(88,151,107,0.26);
-    --blue: #5080b4;
-    --blue-dim: rgba(80,128,180,0.09);
-    --blue-border: rgba(80,128,180,0.26);
-    --gray-dim: rgba(110,107,102,0.09);
-    --gray-border: rgba(110,107,102,0.20);
-    --radius: 14px;
-    --radius-sm: 9px;
+:root{
+  --ground:#F3F4F6;
+  --surface:#FFFFFF;
+  --ink:#1A1D22;
+  --muted:#5B626D;
+  --line:#DDE1E6;
+  --accent:#1F5C8A;
+  --accent-soft:#E3EDF5;
+  --s:#6B4FA0; --t:#1F5C8A; --a:#2F7A55; --r:#A1531E;
+  --s-bg:#F0EBF7; --t-bg:#E3EDF5; --a-bg:#E4F2EA; --r-bg:#F7EBE1;
+  --lead:#1F5C8A; --backup:#8A919B;
+  --sans:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#121418; --surface:#1B1E24; --ink:#E9ECF0; --muted:#9AA2AD; --line:#2C3139;
+    --accent:#7DB3DE; --accent-soft:#1E2B38;
+    --s:#B9A2E3; --t:#7DB3DE; --a:#7CCBA0; --r:#E3A27A;
+    --s-bg:#262036; --t-bg:#1E2B38; --a-bg:#1C2E25; --r-bg:#33251C;
+    --lead:#7DB3DE; --backup:#6E7580;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    line-height: 1.55;
-    padding-bottom: 80px;
-  }
-
-  /* HEADER */
-  .header {
-    padding: 54px 18px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .header-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 7px;
-  }
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 500;
-    line-height: 1.15;
-    color: var(--text);
-  }
-  .header-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 5px;
-  }
-
-  /* STAT ROW */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid var(--border);
-  }
-  .stat {
-    padding: 14px 10px;
-    text-align: center;
-    border-right: 1px solid var(--border);
-  }
-  .stat:last-child { border-right: none; }
-  .stat-n {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1;
-    margin-bottom: 3px;
-  }
-  .stat-n.red { color: var(--red); }
-  .stat-n.amber { color: var(--amber); }
-  .stat-n.gold { color: var(--gold); }
-  .stat-n.green { color: var(--green); }
-  .stat-lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.03em; }
-
-  /* SECTION */
-  .section { padding: 22px 18px 0; }
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  /* CARD */
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .card-header {
-    padding: 14px 15px 12px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .card-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
-  .dot-red { background: var(--red); box-shadow: 0 0 6px rgba(212,92,92,0.5); }
-  .dot-amber { background: var(--amber); box-shadow: 0 0 6px rgba(196,124,56,0.5); }
-  .dot-gold { background: var(--gold); box-shadow: 0 0 6px rgba(201,164,85,0.4); }
-  .dot-green { background: var(--green); }
-  .dot-blue { background: var(--blue); }
-  .dot-gray { background: var(--hint); }
-
-  .card-title-group { flex: 1; min-width: 0; }
-  .card-client {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-  .card-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .card-code {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--hint);
-    margin-top: 2px;
-  }
-
-  /* BADGE */
-  .badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 20px;
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-  .badge-red { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
-  .badge-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
-  .badge-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
-  .badge-green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
-  .badge-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
-  .badge-gray { background: var(--gray-dim); color: var(--muted); border: 1px solid var(--gray-border); }
-
-  /* NEXT ACTION */
-  .next-action {
-    margin: 0 15px 13px;
-    background: var(--card2);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    border-left: 2px solid var(--gold);
-  }
-  .next-action-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 3px;
-  }
-  .next-action-text {
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.4;
-  }
-  .next-action.red { border-left-color: var(--red); }
-  .next-action.red .next-action-label { color: var(--red); }
-  .next-action.amber { border-left-color: var(--amber); }
-  .next-action.amber .next-action-label { color: var(--amber); }
-  .next-action.blue { border-left-color: var(--blue); }
-  .next-action.blue .next-action-label { color: var(--blue); }
-  .next-action.gray { border-left-color: var(--hint); }
-  .next-action.gray .next-action-label { color: var(--muted); }
-
-  /* TASKS */
-  .tasks { margin: 0 15px 14px; }
-  .task {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-  }
-  .task:last-child { border-bottom: none; }
-  .task-check {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    border: 1.5px solid var(--hint);
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-  .task.done .task-check {
-    background: var(--green);
-    border-color: var(--green);
-  }
-  .task.done .task-check::after {
-    content: '';
-    width: 5px;
-    height: 9px;
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    transform: rotate(42deg) translateY(-1px);
-    display: block;
-  }
-  .task-text {
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.4;
-    flex: 1;
-    transition: color 0.15s;
-  }
-  .task.done .task-text {
-    color: var(--hint);
-    text-decoration: line-through;
-    text-decoration-color: var(--hint);
-  }
-  .task-due {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .task-due.overdue { color: var(--red); }
-
-  /* INVOICE ROW */
-  .invoice-row {
-    margin: 0 15px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--card2);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    transition: border-color 0.15s;
-  }
-  .invoice-row:active { border-color: var(--border-med); }
-  .invoice-info { flex: 1; }
-  .invoice-code {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    margin-bottom: 1px;
-  }
-  .invoice-desc { font-size: 13px; color: var(--text); }
-  .invoice-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    padding: 3px 9px;
-    border-radius: 20px;
-    margin-left: 10px;
-    flex-shrink: 0;
-  }
-  .inv-draft { background: var(--gray-dim); color: var(--muted); border: 1px solid var(--gray-border); }
-  .inv-sent { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
-  .inv-pending { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
-  .inv-paid { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
-  .inv-overdue { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
-
-  /* FLAGS */
-  .flags { margin: 0 15px 14px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .flag {
-    font-size: 12px;
-    color: var(--muted);
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 9px;
-  }
-  .flag.warn { color: var(--amber); border-color: var(--amber-border); background: var(--amber-dim); }
-  .flag.alert { color: var(--red); border-color: var(--red-border); background: var(--red-dim); }
-
-  /* PROGRESS */
-  .progress-wrap { margin: 0 15px 14px; }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 5px;
-  }
-  .progress-bar {
-    height: 4px;
-    background: var(--card2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.3s;
-  }
-  .fill-red { background: var(--red); }
-  .fill-amber { background: var(--amber); }
-  .fill-gold { background: var(--gold); }
-  .fill-green { background: var(--green); }
-  .fill-blue { background: var(--blue); }
-  .fill-gray { background: var(--hint); }
-
-  /* DIVIDER */
-  .divider { height: 1px; background: var(--border); margin: 0 15px 13px; }
-
-  /* DEADLINE STRIP */
-  .deadline-strip {
-    margin: 0 15px 13px;
-    background: var(--red-dim);
-    border: 1px solid var(--red-border);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .deadline-icon { font-size: 14px; }
-  .deadline-text { font-size: 12px; color: var(--red); }
-
-  /* SPACER */
-  .spacer { height: 8px; }
-
-  /* FOOTER */
-  .footer {
-    margin: 30px 18px 0;
-    padding: 16px 0;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .footer-text { font-size: 11px; color: var(--hint); }
-  .footer-rev {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--hint);
-  }
+}
+:root[data-theme="dark"]{
+  --ground:#121418; --surface:#1B1E24; --ink:#E9ECF0; --muted:#9AA2AD; --line:#2C3139;
+  --accent:#7DB3DE; --accent-soft:#1E2B38;
+  --s:#B9A2E3; --t:#7DB3DE; --a:#7CCBA0; --r:#E3A27A;
+  --s-bg:#262036; --t-bg:#1E2B38; --a-bg:#1C2E25; --r-bg:#33251C;
+  --lead:#7DB3DE; --backup:#6E7580;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--ground);color:var(--ink);font:16px/1.5 var(--sans);-webkit-text-size-adjust:100%}
+.wrap{max-width:680px;margin:0 auto;padding-inline:16px;padding-block:18px 64px}
+header.top h1{font-size:1.55rem;line-height:1.2;margin:0 0 4px;font-weight:700;text-wrap:balance;letter-spacing:-.01em}
+.meta{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.who{margin:10px 0 0;color:var(--muted);font-size:.92rem}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);display:flex;gap:6px;padding-block:12px;margin-top:6px}
+.tabs button{flex:1;font:600 .92rem var(--sans);padding:10px 8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.tabs button:focus-visible,.chip:focus-visible,.jump a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.jump{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 16px}
+.jump a{font-size:.8rem;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:5px 10px;border-radius:999px;font-weight:600}
+.story{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 72px)}
+.story h2{font-size:1.12rem;margin:2px 0 8px;line-height:1.3;text-wrap:balance}
+.num{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.comp{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.pill{font-size:.76rem;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pill.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.star{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.row .k{font-family:var(--mono);font-size:.82rem;font-weight:500;width:30px;height:30px;border-radius:8px;display:grid;place-items:center}
+.k.S{background:var(--s-bg);color:var(--s)} .k.T{background:var(--t-bg);color:var(--t)} .k.A{background:var(--a-bg);color:var(--a)} .k.R{background:var(--r-bg);color:var(--r)}
+.row p,.row ul{margin:0}
+.row ul{padding-left:18px}
+.row li+li{margin-top:4px}
+.lbl{display:block;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:1px}
+.note{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--ground);font-size:.88rem;color:var(--muted)}
+.note b{color:var(--ink)}
+.takeaway{margin-top:12px;font-style:italic;border-left:3px solid var(--accent);padding-left:10px}
+.section-h{font-size:.78rem;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:1.02rem}
+.card ul{margin:0;padding-left:18px}
+.card li+li{margin-top:6px}
+.comp-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.comp-card h3{margin:0 0 4px;font-size:1.02rem}
+.comp-card .desc{margin:0 0 10px;color:var(--muted);font-size:.88rem}
+.uses{display:grid;gap:6px}
+.chip{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--ground)}
+.chip .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px;flex:none}
+.chip.lead .tag{background:var(--lead);color:var(--surface)}
+.chip.backup .tag{background:transparent;color:var(--backup);border:1px solid var(--backup)}
+.chip .t{font-weight:600;font-size:.92rem}
+.chip .arrow{margin-left:auto;color:var(--muted)}
+.done{opacity:.72}
+.done h3::after{content:" · round 1";font-weight:500;color:var(--muted);font-size:.85rem}
+footer{margin-top:28px;color:var(--muted);font-size:.8rem;text-align:center}
 </style>
-</head>
-<body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="header-eyebrow">Life is Art Productions</div>
-  <h1>Project Dashboard</h1>
-  <div class="header-meta">Updated May 4, 2026 · San Diego</div>
-</div>
+<div class="wrap">
+  <header class="top">
+    <p class="meta">Lead Genius · Apple Lenox Square · Round 2</p>
+    <h1>Interview Playbook</h1>
+    <p class="who">Tue Sep 22 · 2:00pm · Kenny Robertson (Store Leader) and Shane Clinton</p>
+  </header>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat">
-    <div class="stat-n red">3</div>
-    <div class="stat-lbl">Critical</div>
-  </div>
-  <div class="stat">
-    <div class="stat-n amber">3</div>
-    <div class="stat-lbl">Active</div>
-  </div>
-  <div class="stat">
-    <div class="stat-n gold">2</div>
-    <div class="stat-lbl">Invoices Out</div>
-  </div>
-  <div class="stat">
-    <div class="stat-n green">~$14k</div>
-    <div class="stat-lbl">2026 Pipeline</div>
-  </div>
-</div>
+  <nav class="tabs" role="tablist" aria-label="Views">
+    <button id="tab-stories" role="tab" aria-selected="true" aria-controls="view-stories">Stories (STAR)</button>
+    <button id="tab-comps" role="tab" aria-selected="false" aria-controls="view-comps">By competency</button>
+    <button id="tab-prep" role="tab" aria-selected="false" aria-controls="view-prep">Prep</button>
+  </nav>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- TIER 1 — CRITICAL THIS WEEK -->
-<!-- ═══════════════════════════════════════ -->
-<div class="section">
-  <div class="section-label">🔴 Critical — This Week</div>
+  <!-- STORIES -->
+  <section id="view-stories" role="tabpanel" aria-labelledby="tab-stories">
+    <div class="jump">
+      <a href="#s1">1 CE Lab</a><a href="#s2">2 Biz intros</a><a href="#s3">3 Lifecycle doc</a><a href="#s4">4 Mobile repair</a><a href="#s5">5 Shadyside</a><a href="#s6">6 MacBook</a><a href="#coach">Coaching</a>
+    </div>
 
-  <!-- FAITH & FINANCE PILOT -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-red"></div>
-      <div class="card-title-group">
-        <div class="card-client">CLC / Caps Lock Company</div>
-        <div class="card-title">Faith & Finance — Pilot Final</div>
-        <div class="card-code">CLCED series · Editor</div>
+    <article class="story" id="s1">
+      <span class="num">Story 1</span>
+      <h2>CE Lab outage: ~150 test machines in a day</h2>
+      <div class="comp"><span class="pill primary">Drives Results</span><span class="pill">Collaborates</span><span class="pill">Decision Quality</span><span class="pill">Situational Adaptability</span></div>
+      <div class="star">
+        <div class="row"><span class="k S">S</span><p><span class="lbl">Situation</span>During my Career Experience running the watchOS Automation Lab, my morning AI triage tool flagged an unusual spike of test machines failing overnight. An automated update had moved a large group onto an unreleased OS build, and testing for the watchOS engineering teams was stalled.</p></div>
+        <div class="row"><span class="k T">T</span><p><span class="lbl">Task</span>Get the machines back online fast enough to limit the testing impact, even though every affected Mac had to be physically handled.</p></div>
+        <div class="row"><span class="k A">A</span><div><span class="lbl">Action</span><ul>
+          <li>Took the findings to my manager and a peer lab manager, and we worked out a fix together.</li>
+          <li>Brought in the full team to talk through the impact and how to limit it.</li>
+          <li>Split the work by access: I was the only one with lab access, so I physically pulled and updated each Mac while a teammate finished setup remotely.</li>
+          <li>Stayed in constant contact on each machine's status, and sent the wider team regular updates on how many were back online and how many were left.</li>
+        </ul></div></div>
+        <div class="row"><span class="k R">R</span><p><span class="lbl">Result</span>Replaced nearly 150 machines in one day, fully resolved within two. We traced the root cause to a staging update applied to the full lab, and the team added a confirmation step before changes that large could go through.</p></div>
       </div>
-      <div class="badge badge-red">Priority #1</div>
-    </div>
-    <div class="next-action red">
-      <div class="next-action-label">Next Action</div>
-      <div class="next-action-text">Apply Beth's final changes (received 4/30) and deliver completed pilot.</div>
-    </div>
-    <div class="tasks" id="tasks-ff">
-      <div class="task" onclick="toggleTask(this,'ff-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Apply Beth's final revision notes from 4/30</div>
-        <div class="task-due overdue">Due now</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'ff-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Export and deliver final pilot to CLC</div>
-        <div class="task-due">May 5</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'ff-3')">
-        <div class="task-check"></div>
-        <div class="task-text">Confirm delivery with Beth and close project</div>
-        <div class="task-due">May 5</div>
-      </div>
-    </div>
-    <div class="flags">
-      <div class="flag alert">CLCED_007 check — not deposited</div>
-      <div class="flag alert">CLCED_008 — unpaid, status unknown</div>
-    </div>
-  </div>
+      <p class="takeaway">"The fix was only half of it. Keeping everyone informed is what kept testing moving."</p>
+      <div class="note"><b>Say it plainly:</b> "test machines," not agents. "Automated update," not playbooks. "Affected," not infected. Another engineer added the confirmation step, so credit the team.</div>
+    </article>
 
-  <!-- CW011 INVOICE -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-red"></div>
-      <div class="card-title-group">
-        <div class="card-client">Carson Wealth</div>
-        <div class="card-title">Send CW011 Invoice</div>
-        <div class="card-code">Welcome Video · Headshots · Highlight Video</div>
+    <article class="story" id="s2">
+      <span class="num">Story 2</span>
+      <h2>Business introductions coaching</h2>
+      <div class="comp"><span class="pill primary">Develops Talent</span><span class="pill">Drives Results</span><span class="pill">Situational Adaptability</span></div>
+      <div class="star">
+        <div class="row"><span class="k S">S</span><p><span class="lbl">Situation</span>The Technical Specialists I worked with were averaging 1–3 Business introductions per week.</p></div>
+        <div class="row"><span class="k T">T</span><p><span class="lbl">Task</span>Help them recognize and open Business conversations more consistently during technical appointments.</p></div>
+        <div class="row"><span class="k A">A</span><div><span class="lbl">Action</span><ul>
+          <li>Worked alongside them on the floor during live appointments.</li>
+          <li>Coached customer-probing techniques that surface how the customer uses the device and whether there's a work need behind it.</li>
+          <li>Worked in active partnership on the conversation and workflow, including Live Notes and Connect and Personalize in the flow of the appointment.</li>
+        </ul></div></div>
+        <div class="row"><span class="k R">R</span><p><span class="lbl">Result</span>They went from 1–3 to a consistent 3–5 Business introductions per week each.</p></div>
       </div>
-      <div class="badge badge-red">Overdue</div>
-    </div>
-    <div class="next-action red">
-      <div class="next-action-label">Next Action</div>
-      <div class="next-action-text">All deliverables complete. Send CW011 to Heather McGrath. Was due Apr 29.</div>
-    </div>
-    <div class="tasks" id="tasks-cw011">
-      <div class="task" onclick="toggleTask(this,'cw011-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Send CW011 invoice to Heather McGrath</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-    </div>
-    <div class="invoice-row" onclick="cycleInvoice(this,'cw011-inv')">
-      <div class="invoice-info">
-        <div class="invoice-code">CW011</div>
-        <div class="invoice-desc">Welcome Video + Headshots + Highlight</div>
-      </div>
-      <div class="invoice-status inv-draft">Draft</div>
-    </div>
-    <div class="flags">
-      <div class="flag warn">John Marshall — $1,250 to pay after CW011 received</div>
-    </div>
-  </div>
+    </article>
 
-  <!-- DEPOSIT CLC CHECKS -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-red"></div>
-      <div class="card-title-group">
-        <div class="card-client">CLC / Action Required</div>
-        <div class="card-title">Deposit Outstanding Checks</div>
-        <div class="card-code">CLCED_007 + CLCED_008 status</div>
+    <article class="story" id="s3">
+      <span class="num">Story 3</span>
+      <h2>Device lifecycle document</h2>
+      <div class="comp"><span class="pill primary">Builds Effective Teams</span><span class="pill">Develops Talent</span><span class="pill">Customer Focus</span><span class="pill">Plans &amp; Aligns</span></div>
+      <div class="star">
+        <div class="row"><span class="k S">S</span><p><span class="lbl">Situation</span>I noticed a trend of devices being checked in incorrectly: missing photos, notes unrelated to the issue, names not verified before signing. Each was minor, but a few came back as larger problems.</p></div>
+        <div class="row"><span class="k T">T</span><p><span class="lbl">Task</span>When I was asked to lead our Genius Bar split download, I chose this as the topic, aiming to fix the habit and not just the moment.</p></div>
+        <div class="row"><span class="k A">A</span><div><span class="lbl">Action</span><ul>
+          <li>Co-presented with a fellow Genius. I identified the issue and proposed a living document mapping a device's lifecycle while it's with us.</li>
+          <li>Focused on the bare-minimum steps at each stage and <em>why</em> each matters, like Connect and Personalize at check-in and mandatory photos on every device.</li>
+          <li>My partner helped build the outline, and the team's feedback during the download built the core of the document together.</li>
+        </ul></div></div>
+        <div class="row"><span class="k R">R</span><p><span class="lbl">Result</span>Immediate improvement that day, and positive feedback from technicians and leadership. It has slipped since, so I'm finishing the document and pinning it to the Genius Bar team's Slack, where anyone can check it and we keep it current.</p></div>
       </div>
-      <div class="badge badge-red">Overdue</div>
-    </div>
-    <div class="next-action red">
-      <div class="next-action-label">Next Action</div>
-      <div class="next-action-text">CLCED_007 physical check in hand — get to bank. Chase CLCED_008 status with Beth.</div>
-    </div>
-    <div class="tasks" id="tasks-dep">
-      <div class="task" onclick="toggleTask(this,'dep-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Deposit CLCED_007 check at bank</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'dep-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Follow up with Beth on CLCED_008 payment status</div>
-        <div class="task-due">May 5</div>
-      </div>
-    </div>
-  </div>
-</div>
+      <p class="takeaway">"A download fades, but a reference doesn't."</p>
+      <div class="note"><b>Before 2pm:</b> if it's pinned, say "it's now pinned." Also a fallback for "something that didn't go as planned."</div>
+    </article>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- TIER 2 — ACTIVE -->
-<!-- ═══════════════════════════════════════ -->
-<div class="section">
-  <div class="section-label">🟠 Active — In Progress</div>
+    <article class="story" id="s4">
+      <span class="num">Story 4</span>
+      <h2>Mobile repair strategy and Mac completion</h2>
+      <div class="comp"><span class="pill primary">Drives Results (sustained)</span><span class="pill">Customer Focus</span><span class="pill">Instills Trust</span><span class="pill">Collaborates</span></div>
+      <div class="star">
+        <div class="row"><span class="k S">S</span><p><span class="lbl">Situation</span>Repair turnaround averaged about 90 minutes, and the technician culture was more reactive than proactive.</p></div>
+        <div class="row"><span class="k T">T</span><p><span class="lbl">Task</span>Bring turnaround down without sacrificing quality, and keep Mac in-store completion above the 75% company goal.</p></div>
+        <div class="row"><span class="k A">A</span><div><span class="lbl">Action</span><ul>
+          <li>Designed a mobile repair strategy with management, shifting toward proactive repair and full customer-journey support.</li>
+          <li>Some senior technicians pushed back. I explained the <em>why</em>: faster turnaround improves the customer's experience directly and frees capacity to support more customers.</li>
+          <li>Coached Technical Experts on "early and often": flag a repair as soon as it slips past 90 minutes and raise issues early. I made sure those conversations reached the right people; I didn't move resources myself.</li>
+          <li>Set consistent customer expectations and kept open communication with Geniuses and leadership.</li>
+        </ul></div></div>
+        <div class="row"><span class="k R">R</span><p><span class="lbl">Result</span>Turnaround went from 90 to under 60 minutes at a 99% success rate. Mac completion held at 80–90% against the 75% goal. Daily numbers move with demand and staffing, but the average stayed improved and the culture change held.</p></div>
+      </div>
+      <div class="note"><b>Tell it as leadership, not technique.</b> You may have used this in round 1 under Functional Expertise. Lead with the pushback and the culture change.</div>
+    </article>
 
-  <!-- CW012 TAXES IN RETIREMENT -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-amber"></div>
-      <div class="card-title-group">
-        <div class="card-client">Carson Wealth</div>
-        <div class="card-title">Taxes in Retirement</div>
-        <div class="card-code">CW012 · Post-production</div>
+    <article class="story" id="s5">
+      <span class="num">Story 5</span>
+      <h2>Shadyside NSO avenue install</h2>
+      <div class="comp"><span class="pill primary">Situational Adaptability</span><span class="pill">Drives Results</span><span class="pill">Builds Effective Teams</span><span class="pill">Decision Quality</span></div>
+      <div class="star">
+        <div class="row"><span class="k S">S</span><p><span class="lbl">Situation</span>During the Shadyside new store opening, the merchandising mentor team unexpectedly lost a mentor. I wasn't officially in the mentor program.</p></div>
+        <div class="row"><span class="k T">T</span><p><span class="lbl">Task</span>Step in and keep the avenue installation on schedule.</p></div>
+        <div class="row"><span class="k A">A</span><div><span class="lbl">Action</span><ul>
+          <li>Stepped in to lead a 4–5 person team, and made the call on the spot to split into two parallel teams working two bays at a time.</li>
+          <li>Held the work to a high quality bar while moving faster.</li>
+          <li>Updated stakeholders as each milestone was hit, so they could inspect whenever they wanted.</li>
+        </ul></div></div>
+        <div class="row"><span class="k R">R</span><p><span class="lbl">Result</span>All 5 bays installed a day ahead of schedule.</p></div>
       </div>
-      <div class="badge badge-amber">Awaiting Approval</div>
-    </div>
-    <div class="next-action amber">
-      <div class="next-action-label">Next Action</div>
-      <div class="next-action-text">v2 delivered Apr 30. Awaiting Kristen's final approval. Send CW012 invoice on approval.</div>
-    </div>
-    <div class="tasks" id="tasks-cw012">
-      <div class="task" onclick="toggleTask(this,'cw012-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Receive final approval from Kristen</div>
-        <div class="task-due">Pending</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'cw012-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Send CW012 invoice to Heather McGrath</div>
-        <div class="task-due">May 8</div>
-      </div>
-    </div>
-    <div class="invoice-row" onclick="cycleInvoice(this,'cw012-inv')">
-      <div class="invoice-info">
-        <div class="invoice-code">CW012</div>
-        <div class="invoice-desc">Taxes in Retirement — final edit</div>
-      </div>
-      <div class="invoice-status inv-draft">Draft</div>
-    </div>
-    <div class="flags">
-      <div class="flag warn">John Marshall — $1,250 to pay after CW012 received</div>
-    </div>
-  </div>
+    </article>
 
-  <!-- CW010 AWAITING PAYMENT -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-amber"></div>
-      <div class="card-title-group">
-        <div class="card-client">Carson Wealth</div>
-        <div class="card-title">CW010 — Awaiting Payment</div>
-        <div class="card-code">CW010 · Invoice sent</div>
+    <article class="story" id="s6">
+      <span class="num">Story 6</span>
+      <h2>The MacBook repair with no notes</h2>
+      <div class="comp"><span class="pill primary">Manages Conflict</span><span class="pill">Decision Quality</span><span class="pill">Instills Trust</span><span class="pill">Builds Effective Teams</span></div>
+      <div class="star">
+        <div class="row"><span class="k S">S</span><p><span class="lbl">Situation</span>On a Sunday before open, a fellow Genius picked up a MacBook someone had started working on with no notes. We couldn't tell if parts were installed, if it had been opened, or if diagnostics or a revive had been done. He got frustrated right away.</p></div>
+        <div class="row"><span class="k T">T</span><p><span class="lbl">Task</span>Keep his frustration from turning into blame, and make the right call on a repair we didn't have enough information about.</p></div>
+        <div class="row"><span class="k A">A</span><div><span class="lbl">Action</span><ul>
+          <li>Talked through reasons a repair might be left that way, and encouraged assuming positive intent until we had the full picture.</li>
+          <li>We agreed to set it aside until the Lead Genius or admin arrived, and moved on to other repairs.</li>
+          <li>About an hour later the admin explained that Repair Central wasn't saving anything new on that repair, and an IS&amp;T ticket was already open.</li>
+          <li>Debriefed with the frustrated Genius. We agreed it was a one-off and that the fix was visibility: post these situations in Slack.</li>
+        </ul></div></div>
+        <div class="row"><span class="k R">R</span><p><span class="lbl">Result</span>Setting it aside was the right call. The frustrated Genius gave the original technician the Slack feedback himself, constructively, and the team got a clear practice for one-offs.</p></div>
       </div>
-      <div class="badge badge-amber">Sent</div>
-    </div>
-    <div class="next-action amber">
-      <div class="next-action-label">Status</div>
-      <div class="next-action-text">W-9 address corrected Apr 29. Payment should process. Follow up with Heather if no movement by May 9.</div>
-    </div>
-    <div class="invoice-row" onclick="cycleInvoice(this,'cw010-inv')">
-      <div class="invoice-info">
-        <div class="invoice-code">CW010</div>
-        <div class="invoice-desc">Prior deliverables — awaiting payment</div>
-      </div>
-      <div class="invoice-status inv-sent">Sent</div>
-    </div>
-  </div>
+      <div class="note"><b>Strongest beat:</b> the frustrated Genius delivered the feedback himself. You turned a potential clash into peer-to-peer coaching.</div>
+    </article>
 
-  <!-- AUDIA CUP 2025 POST -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-amber"></div>
-      <div class="card-title-group">
-        <div class="card-client">Audia Group</div>
-        <div class="card-title">Audia Cup 2025 — Post Production</div>
-        <div class="card-code">AGV_242 · Photo + Documentary</div>
+    <article class="story" id="coach">
+      <span class="num">Not STAR · for "how" questions</span>
+      <h2>Coaching approach, tailored by role</h2>
+      <div class="comp"><span class="pill primary">Develops Talent</span><span class="pill">Situational Adaptability</span></div>
+      <p style="margin:0 0 10px;color:var(--muted);font-size:.92rem">Use for "How do you develop others?" or "How would you lead as a Lead Genius?"</p>
+      <div class="star">
+        <div class="row"><span class="k T">1</span><p><span class="lbl">Technical Specialists</span>On the floor in appointments, working on workflows and conversations with Live Notes and Connect and Personalize. <a href="#s2" data-go="s2">Example: Story 2</a></p></div>
+        <div class="row"><span class="k A">2</span><p><span class="lbl">Technical Experts</span>"Early and often" communication and the repair feedback they give peers, to move turnaround and accessory connection at pickup. <a href="#s4" data-go="s4">Example: Story 4</a></p></div>
+        <div class="row"><span class="k S">3</span><p><span class="lbl">Geniuses and leadership</span>A weekly conversation with my Lead about metrics: gains, drops, new focus areas, the <em>why</em> behind changes, and what to try next.</p></div>
       </div>
-      <div class="badge badge-amber">In Progress</div>
-    </div>
-    <div class="deadline-strip">
-      <div class="deadline-icon">⚠️</div>
-      <div class="deadline-text">Personal goal: substantially complete before Audia Cup 2026 departs June 13</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-label"><span>Overall progress</span><span>8%</span></div>
-      <div class="progress-bar"><div class="progress-fill fill-amber" style="width:8%"></div></div>
-    </div>
-    <div class="tasks" id="tasks-agv25">
-      <div class="task" onclick="toggleTask(this,'agv25-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Follow up with Erika on delivery expectations</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv25-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Cull and select images in Lightroom</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv25-3')">
-        <div class="task-check"></div>
-        <div class="task-text">Begin photo editing</div>
-        <div class="task-due">May 7</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv25-4')">
-        <div class="task-check"></div>
-        <div class="task-text">Plan book layout and canvas deliverables</div>
-        <div class="task-due">May 14</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv25-5')">
-        <div class="task-check"></div>
-        <div class="task-text">Begin documentary edit (full week of footage)</div>
-        <div class="task-due">May 14</div>
-      </div>
-    </div>
-    <div class="flags">
-      <div class="flag">Invoice variable — based on editing hours + Blurb costs</div>
-      <div class="flag">Client OK with delivery after 2026 event</div>
-    </div>
-  </div>
-</div>
+    </article>
+  </section>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- TIER 3 — UPCOMING / PRE-PRODUCTION -->
-<!-- ═══════════════════════════════════════ -->
-<div class="section">
-  <div class="section-label">🟡 Upcoming — Pre-Production</div>
+  <!-- COMPETENCIES -->
+  <section id="view-comps" role="tabpanel" aria-labelledby="tab-comps" hidden>
+    <p class="section-h" style="margin-top:4px">Likely this round · tap a story</p>
+    <div id="comp-list"></div>
+    <p class="section-h">Covered in round 1</p>
+    <div class="comp-card done"><h3>Functional Expertise</h3></div>
+    <div class="comp-card done"><h3>Values Differences</h3></div>
+    <div class="comp-card done"><h3>Drives What Matters</h3><p class="desc" style="margin:4px 0 0">Differs from Drives Results: choosing the right focus vs. delivering it through obstacles.</p></div>
+  </section>
 
-  <!-- AUDIA CUP 2026 -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-gold"></div>
-      <div class="card-title-group">
-        <div class="card-client">Audia Group</div>
-        <div class="card-title">Audia Cup 2026 — Ireland</div>
-        <div class="card-code">Old Head Golf Links · Kinsale · Jun 20–27</div>
-      </div>
-      <div class="badge badge-gold">40 Days Out</div>
-    </div>
-    <div class="next-action">
-      <div class="next-action-label">Next Action</div>
-      <div class="next-action-text">Confirm gear list and build shot list by May 15. Depart San Diego June 13.</div>
-    </div>
-    <div class="tasks" id="tasks-agv26">
-      <div class="task" onclick="toggleTask(this,'agv26-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Message Erika about camera gear availability on location</div>
-        <div class="task-due">May 7</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv26-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Confirm full gear list for the event</div>
-        <div class="task-due">May 15</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv26-3')">
-        <div class="task-check"></div>
-        <div class="task-text">Create shot list and coverage plan</div>
-        <div class="task-due">May 15</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'agv26-4')">
-        <div class="task-check"></div>
-        <div class="task-text">Pack and prep all gear before departure</div>
-        <div class="task-due">Jun 13</div>
-      </div>
-    </div>
-    <div class="flags">
-      <div class="flag warn">International shoot — gear logistics differ from domestic</div>
-      <div class="flag">Flight purchased · Depart June 13</div>
-      <div class="flag">~$4,900–$7,400 projected</div>
-    </div>
-  </div>
+  <!-- PREP -->
+  <section id="view-prep" role="tabpanel" aria-labelledby="tab-prep" hidden>
+    <p class="section-h" style="margin-top:4px">Answer shape for Drives Results</p>
+    <div class="card"><ul>
+      <li><b>Target</b> → <b>obstacle</b> → <b>levers you pulled</b> → <b>measurable result</b> → <b>how it lasted</b>.</li>
+      <li>The last step is the depth India said was missing. At Lead scope, the result lasting without you is the point.</li>
+    </ul></div>
 
-  <!-- PSO -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-blue"></div>
-      <div class="card-title-group">
-        <div class="card-client">Pittsburgh Symphony Orchestra</div>
-        <div class="card-title">Remaining Edits — Decision Required</div>
-        <div class="card-code">PSO_001 · Invoice already paid</div>
-      </div>
-      <div class="badge badge-blue">Decide</div>
-    </div>
-    <div class="next-action blue">
-      <div class="next-action-label">Next Action</div>
-      <div class="next-action-text">Two edits remain. Invoice paid. Project dormant 6+ months. Complete as goodwill or formally close? Contact Rebecca Cain.</div>
-    </div>
-    <div class="tasks" id="tasks-pso">
-      <div class="task" onclick="toggleTask(this,'pso-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Review scope of 2 remaining edits and decide path</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-    </div>
-  </div>
-</div>
+    <p class="section-h">Why Atlanta</p>
+    <div class="card"><ul>
+      <li><b>Roots:</b> grew up in Canton. Parents in Atlanta, brother in Suwanee. A move back, not a move away.</li>
+      <li><b>Role:</b> why Lead now.</li>
+      <li><b>Store:</b> why Lenox Square specifically.</li>
+    </ul></div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- TIER 4 — ADMIN / INFRASTRUCTURE -->
-<!-- ═══════════════════════════════════════ -->
-<div class="section">
-  <div class="section-label">⚪ Admin & Infrastructure</div>
+    <p class="section-h">Lead vs. Genius</p>
+    <div class="card"><p style="margin:0">The Lead owns the Bar's outcomes through other people: coaching, the daily operational plan, escalations, and partnering with managers, rather than being the best individual technician.</p></div>
 
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-gray"></div>
-      <div class="card-title-group">
-        <div class="card-client">LIAP Internal</div>
-        <div class="card-title">Overdue Actions</div>
-        <div class="card-code">Tools · Storage · Brand</div>
-      </div>
-      <div class="badge badge-gray">Queued</div>
-    </div>
-    <div class="tasks" id="tasks-admin">
-      <div class="task" onclick="toggleTask(this,'admin-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Download DaVinci Resolve (free)</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Launch Adobe Portfolio via Lightroom</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-3')">
-        <div class="task-check"></div>
-        <div class="task-text">Point lifeisartproductions.com to Portfolio</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-4')">
-        <div class="task-check"></div>
-        <div class="task-text">Set up Backblaze B2 cloud backup</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-5')">
-        <div class="task-check"></div>
-        <div class="task-text">Research equipment insurance (PPA or Hill & Usher)</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-6')">
-        <div class="task-check"></div>
-        <div class="task-text">Review and renew Artlist Max Pro (renews May 25)</div>
-        <div class="task-due">May 20</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-7')">
-        <div class="task-check"></div>
-        <div class="task-text">Cold drive reorg — resume at Audia Group › Audia Cup › Footage</div>
-        <div class="task-due">Ongoing</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'admin-8')">
-        <div class="task-check"></div>
-        <div class="task-text">Joshua Tree — offload card + verify backup</div>
-        <div class="task-due overdue">Overdue</div>
-      </div>
-    </div>
-  </div>
+    <p class="section-h">Your pattern, if asked about style</p>
+    <div class="card"><p style="margin:0">I keep stakeholders informed without being asked: team updates during the lab outage (<a href="#s1" data-go="s1">1</a>), "early and often" on repair time (<a href="#s4" data-go="s4">4</a>), milestone check-ins at Shadyside (<a href="#s5" data-go="s5">5</a>).</p></div>
 
-  <!-- GEAR PURCHASES -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-gray"></div>
-      <div class="card-title-group">
-        <div class="card-client">LIAP Gear</div>
-        <div class="card-title">Phase 1 Purchases</div>
-        <div class="card-code">Before Audia Cup · Gated on Carson Wealth payment</div>
-      </div>
-      <div class="badge badge-gray">Gated</div>
-    </div>
-    <div class="next-action gray">
-      <div class="next-action-label">Gate Condition</div>
-      <div class="next-action-text">Pay $1,289 outstanding 2025 taxes first. Then Phase 1 gear on Carson Wealth income.</div>
-    </div>
-    <div class="tasks" id="tasks-gear">
-      <div class="task" onclick="toggleTask(this,'gear-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Rode NTG5 Kit (~$499–549) — priority before Audia Cup</div>
-        <div class="task-due">May 15</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'gear-2')">
-        <div class="task-check"></div>
-        <div class="task-text">K-Tek KE-89CC Boom Pole (~$149–179)</div>
-        <div class="task-due">May 15</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'gear-3')">
-        <div class="task-check"></div>
-        <div class="task-text">Zoom F6 Field Recorder (~$499–599)</div>
-        <div class="task-due">May 15</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'gear-4')">
-        <div class="task-check"></div>
-        <div class="task-text">Rode VXLR+ Adapter (~$25) — permanent backup</div>
-        <div class="task-due">May 15</div>
-      </div>
-    </div>
-  </div>
+    <p class="section-h">Watch-outs</p>
+    <div class="card"><ul>
+      <li>Open by asking Shane about his role with the store.</li>
+      <li>NSO Mentor travel: "I'd work that out with you and the IS&amp;T field leaders." Don't guess.</li>
+      <li>How you heard about the role: answer plainly. Kenny knows Nate reached out.</li>
+      <li>Keep Story 4 out of the coaching answer so it's fresh for Drives Results.</li>
+    </ul></div>
 
-  <!-- TAX -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-dot dot-red"></div>
-      <div class="card-title-group">
-        <div class="card-client">LIAP Finance</div>
-        <div class="card-title">Outstanding Tax Obligations</div>
-        <div class="card-code">2025 balance + 2026 estimated</div>
-      </div>
-      <div class="badge badge-red">Owed</div>
-    </div>
-    <div class="tasks" id="tasks-tax">
-      <div class="task" onclick="toggleTask(this,'tax-1')">
-        <div class="task-check"></div>
-        <div class="task-text">Pay $1,289 remaining 2025 quarterly taxes</div>
-        <div class="task-due alert">Before gear spend</div>
-      </div>
-      <div class="task" onclick="toggleTask(this,'tax-2')">
-        <div class="task-check"></div>
-        <div class="task-text">Pay 2026 Q2 estimated taxes</div>
-        <div class="task-due">Jun 16</div>
-      </div>
-    </div>
-  </div>
-</div>
+    <p class="section-h">Questions to ask</p>
+    <div class="card"><ul>
+      <li>Kenny: "What separates the Leads who really thrive at Lenox Square?"</li>
+      <li>Kenny: "What's the biggest thing the Genius Bar team needs from its next Lead?"</li>
+      <li>Shane: one question matched to his scope, once you know it.</li>
+    </ul></div>
+  </section>
 
-<!-- FOOTER -->
-<div class="footer">
-  <div class="footer-text">LIAP · Life is Art Productions</div>
-  <div class="footer-rev">v2026.05.04</div>
+  <footer>Six stories · every likely competency has a lead</footer>
 </div>
 
 <script>
-// ── Local Storage Keys ──────────────────────
-const LS_PREFIX = 'liap_';
+(function(){
+  var stories={s1:"CE Lab outage",s2:"Business intros",s3:"Lifecycle doc",s4:"Mobile repair + Mac",s5:"Shadyside install",s6:"MacBook, no notes"};
+  var comps=[
+    {n:"Drives Results",d:"Delivering outcomes consistently, especially through obstacles. Expected this round.",lead:["s1"],backup:["s4","s5"]},
+    {n:"Develops Talent / Coaches",d:"Growing others' capability.",lead:["s2"],backup:["coach","s3"]},
+    {n:"Builds Effective Teams",d:"Creating structures and habits the team owns.",lead:["s3"],backup:["s5"]},
+    {n:"Customer Focus",d:"Decisions driven by the customer experience.",lead:["s4"],backup:["s3"]},
+    {n:"Collaborates",d:"Working across people and functions toward a shared goal.",lead:["s1"],backup:["s4"]},
+    {n:"Situational Adaptability",d:"Adjusting quickly when the plan breaks.",lead:["s5"],backup:["s1"]},
+    {n:"Decision Quality",d:"Sound calls with incomplete information.",lead:["s1"],backup:["s6","s5"]},
+    {n:"Instills Trust",d:"Transparency and follow-through that earn buy-in.",lead:["s4"],backup:["s6"]},
+    {n:"Manages Conflict",d:"Turning friction into a productive outcome.",lead:["s6"],backup:[]}
+  ];
+  stories.coach="Coaching approach";
+  function chip(id,kind){
+    var num=id==="coach"?"":id.slice(1)+". ";
+    return '<a class="chip '+kind+'" href="#'+id+'" data-go="'+id+'"><span class="tag">'+kind+'</span><span class="t">'+num+stories[id]+'</span><span class="arrow" aria-hidden="true">›</span></a>';
+  }
+  document.getElementById("comp-list").innerHTML=comps.map(function(c){
+    return '<div class="comp-card"><h3>'+c.n+'</h3><p class="desc">'+c.d+'</p><div class="uses">'+
+      c.lead.map(function(i){return chip(i,"lead")}).join("")+
+      c.backup.map(function(i){return chip(i,"backup")}).join("")+'</div></div>';
+  }).join("");
 
-function getKey(id) { return LS_PREFIX + id; }
-
-// ── Task Toggle ─────────────────────────────
-function toggleTask(el, id) {
-  const isDone = el.classList.toggle('done');
-  localStorage.setItem(getKey(id), isDone ? '1' : '0');
-}
-
-// ── Invoice Cycle ───────────────────────────
-const INV_STATES = [
-  { cls: 'inv-draft',   label: 'Draft' },
-  { cls: 'inv-sent',    label: 'Sent' },
-  { cls: 'inv-pending', label: 'Pending' },
-  { cls: 'inv-paid',    label: 'Paid' }
-];
-
-function cycleInvoice(row, id) {
-  const badge = row.querySelector('.invoice-status');
-  let cur = parseInt(localStorage.getItem(getKey(id)) || '0');
-  cur = (cur + 1) % INV_STATES.length;
-  localStorage.setItem(getKey(id), cur);
-  INV_STATES.forEach(s => badge.classList.remove(s.cls));
-  badge.classList.add(INV_STATES[cur].cls);
-  badge.textContent = INV_STATES[cur].label;
-}
-
-// ── Restore State on Load ───────────────────
-function restoreState() {
-  // Tasks
-  document.querySelectorAll('.task').forEach(el => {
-    const fn = el.getAttribute('onclick');
-    if (!fn) return;
-    const match = fn.match(/'([^']+)'\)$/);
-    if (!match) return;
-    const id = match[1];
-    if (localStorage.getItem(getKey(id)) === '1') {
-      el.classList.add('done');
-    }
+  var tabs={stories:"tab-stories",comps:"tab-comps",prep:"tab-prep"};
+  function show(name,noSave){
+    Object.keys(tabs).forEach(function(k){
+      document.getElementById("view-"+k).hidden=(k!==name);
+      document.getElementById(tabs[k]).setAttribute("aria-selected",k===name?"true":"false");
+    });
+    if(!noSave){try{localStorage.setItem("lenoxTab",name)}catch(e){}}
+  }
+  Object.keys(tabs).forEach(function(k){
+    document.getElementById(tabs[k]).addEventListener("click",function(){show(k);window.scrollTo(0,0)});
   });
-
-  // Invoices
-  document.querySelectorAll('.invoice-row').forEach(row => {
-    const fn = row.getAttribute('onclick');
-    if (!fn) return;
-    const match = fn.match(/'([^']+)'\)$/);
-    if (!match) return;
-    const id = match[1];
-    const saved = localStorage.getItem(getKey(id));
-    if (saved && saved !== '0') {
-      const idx = parseInt(saved);
-      const badge = row.querySelector('.invoice-status');
-      INV_STATES.forEach(s => badge.classList.remove(s.cls));
-      badge.classList.add(INV_STATES[idx].cls);
-      badge.textContent = INV_STATES[idx].label;
-    }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest("[data-go]");
+    if(!a)return;
+    e.preventDefault();
+    show("stories");
+    var el=document.getElementById(a.getAttribute("data-go"));
+    if(el)el.scrollIntoView({block:"start"});
   });
-}
-
-restoreState();
+  try{var t=localStorage.getItem("lenoxTab");if(t&&tabs[t])show(t,true)}catch(e){}
+})();
 </script>
-</body>
-</html>
